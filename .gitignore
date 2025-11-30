@@ -1,2 +1,25 @@
 .idea
 .venv
+
+# Python
+__pycache__/
+*.pyc
+
+# Output files
+converted/
+*.mp3
+*.mp4
+*.webm
+
+# Build artifacts
+dist/
+build/
+*.spec
+*.exe
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Temp
+temp_*
