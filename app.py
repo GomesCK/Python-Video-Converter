@@ -8,34 +8,22 @@ import sys
 from config_ffmpeg import *   # FFMPEG_PATH e FFPROBE_PATH
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
+COOKIE_FILE = "www.youtube.com_cookies.txt"
 
 OUTPUT_DIR = "converted"
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
+
+
 # ==========================================================
 # TENTA CARREGAR COOKIES DO NAVEGADOR
 # ==========================================================
-def get_browser_for_cookies():
-    try:
-        import browser_cookie3 as bc3
-    except:
-        return None
 
-    # tenta chrome → edge → firefox
-    for browser in ["chrome", "edge", "firefox"]:
-        try:
-            if browser == "chrome":
-                return bc3.chrome()
-            if browser == "edge":
-                return bc3.edge()
-            if browser == "firefox":
-                return bc3.firefox()
-        except:
-            pass
-
+def get_cookie_file():
+    if os.path.exists(COOKIE_FILE):
+        return COOKIE_FILE
     return None
-
 
 @app.route("/")
 def home():
@@ -56,7 +44,7 @@ def convert():
         temp_output = f"temp_{uid}.%(ext)s"
 
         # Detectar cookies localmente
-        cookies = get_browser_for_cookies()
+        cookies = get_cookie_file()
 
         ydl_opts = {
             "outtmpl": temp_output,
@@ -71,7 +59,7 @@ def convert():
 
         # Se tiver cookies, habilita
         if cookies:
-            ydl_opts["cookiejar"] = cookies
+            ydl_opts["cookiefile"] = cookies
         else:
             print("\n⚠️ Nenhum cookie encontrado — vídeos protegidos pelo YouTube podem falhar.\n")
 
